@@ -24,24 +24,24 @@ function StatRow({
     <tr>
       <td className="flex items-center justify-start p-2">
         <ChangeButton
-          type="+"
+          value="+"
           onClick={() => callbackFn('team1', fieldName, 'increment')}
         />
-        <p className="px-2">{team1Data}</p>
+        <p className="px-2 font-bold">{team1Data}</p>
         <ChangeButton
-          type="-"
+          value="-"
           onClick={() => callbackFn('team1', fieldName, 'decrement')}
         />
       </td>
       <th className="py-4 font-normal">{title}</th>
       <td className="flex items-center justify-end p-2">
         <ChangeButton
-          type="+"
+          value="+"
           onClick={() => callbackFn('team2', fieldName, 'increment')}
         />
-        <p className="px-2">{team2Data}</p>
+        <p className="px-2 font-bold">{team2Data}</p>
         <ChangeButton
-          type="-"
+          value="-"
           onClick={() => callbackFn('team2', fieldName, 'decrement')}
         />
       </td>

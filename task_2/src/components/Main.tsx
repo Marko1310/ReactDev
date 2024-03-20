@@ -5,18 +5,23 @@ import CurrentDate from './CurrentDate';
 import TeamStats from './TeamStats';
 import Timer from './Timer';
 import { team1, team2 } from '../data/teams';
+import Goals from './Goals';
 
 export type TeamStatsType = {
-  score: number;
   shots: number;
   fouls: number;
   yellowCards: number;
   redCards: number;
 };
 
+export type ScoreType = {
+  team1Score: number;
+  team2Score: number;
+  minute: number;
+};
+
 function Main() {
   const [team1Stats, setTeam1Stats] = useState<TeamStatsType>({
-    score: 0,
     shots: 0,
     fouls: 0,
     yellowCards: 0,
@@ -24,7 +29,6 @@ function Main() {
   });
 
   const [team2Stats, setTeam2Stats] = useState<TeamStatsType>({
-    score: 0,
     shots: 0,
     fouls: 0,
     yellowCards: 0,
@@ -42,6 +46,40 @@ function Main() {
     }
   };
   setTimeout(updateTimer, 1000);
+
+  const [scoreData, setScoreData] = useState<ScoreType[]>([]);
+
+  const handleScoreChange = function (
+    value: 'increment' | 'decrement',
+    team?: 'team1' | 'team2',
+  ) {
+    if (value === 'decrement') {
+      if (scoreData.length === 0) return;
+      scoreData.pop();
+    }
+    if (value === 'increment' && team === 'team1') {
+      setScoreData((prevStats) => {
+        const lastEvent = prevStats[prevStats.length - 1];
+        const newEvent = {
+          team1Score: lastEvent?.team1Score ? lastEvent.team1Score + 1 : 1,
+          team2Score: lastEvent?.team2Score ? lastEvent.team2Score : 0,
+          minute: minutes,
+        };
+        return [...prevStats, newEvent];
+      });
+    }
+    if (value === 'increment' && team === 'team2') {
+      setScoreData((prevStats) => {
+        const lastEvent = prevStats[prevStats.length - 1];
+        const newEvent = {
+          team1Score: lastEvent?.team1Score ? lastEvent.team1Score : 0,
+          team2Score: lastEvent?.team2Score ? lastEvent?.team2Score + 1 : 1,
+          minute: minutes,
+        };
+        return [...prevStats, newEvent];
+      });
+    }
+  };
 
   const handleChangeTeamStats = function (
     team: 'team1' | 'team2',
@@ -91,6 +129,7 @@ function Main() {
       yellowCards: 0,
       redCards: 0,
     }));
+    setScoreData([]);
   };
 
   return (
@@ -102,15 +141,15 @@ function Main() {
           <div className="r flex justify-between gap-4">
             <Team teamName={team1.name} crest={team1.crest} />
             <Score
-              fieldName="score"
-              team1Score={team1Stats.score}
-              team2Score={team2Stats.score}
-              updateScore={handleChangeTeamStats}
+              team1Score={scoreData.slice(-1)[0]?.team1Score || 0}
+              team2Score={scoreData.slice(-1)[0]?.team2Score || 0}
+              updateScore={handleScoreChange}
               resetState={resetState}
             />
             <Team teamName={team2.name} crest={team2.crest} />
           </div>
         </div>
+        <Goals scoreData={scoreData} />
         <TeamStats
           team1Stats={team1Stats}
           team2Stats={team2Stats}

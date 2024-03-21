@@ -1,4 +1,4 @@
-import { ScoreType } from './Main';
+import { ScoreType } from '../types/dataTypes';
 
 function Goals({ scoreData }: { scoreData: ScoreType[] }) {
   return (

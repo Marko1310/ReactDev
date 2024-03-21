@@ -1,13 +1,10 @@
-import ChangeButton from './ChangeButton';
-import { TeamStatsType } from './Main';
+import ChangeButton from './ui/ChangeButton';
+import { ChangeKeysType, TeamKeysType } from '../types/dataTypes';
 
 type ScoreProps = {
   team1Score: number;
   team2Score: number;
-  updateScore: (
-    value: 'increment' | 'decrement',
-    team?: 'team1' | 'team2',
-  ) => void;
+  updateScore: (change: ChangeKeysType, team?: TeamKeysType) => void;
   resetState: () => void;
 };
 
@@ -32,15 +29,15 @@ function Score({
         <div className="flex gap-1 lg:gap-2">
           <ChangeButton
             value="+"
-            onClick={() => updateScore('increment', 'team1')}
+            onClick={() => updateScore('increase', 'team1')}
           />
           <ChangeButton
             value="Undo Score"
-            onClick={() => updateScore('decrement')}
+            onClick={() => updateScore('decrease')}
           />
           <ChangeButton
             value="+"
-            onClick={() => updateScore('increment', 'team2')}
+            onClick={() => updateScore('increase', 'team2')}
           />
         </div>
       </div>

@@ -1,13 +1,17 @@
+import {
+  ChangeKeysType,
+  TeamKeysType,
+  TeamStatsType,
+} from '../types/dataTypes';
 import StatRow from './StatRow';
-import { TeamStatsType } from './Main';
 
 type TeamStatsProps = {
   team1Stats: TeamStatsType;
   team2Stats: TeamStatsType;
   handleChangeTeamStats: (
-    team: 'team1' | 'team2',
+    team: TeamKeysType,
     fieldName: keyof TeamStatsType,
-    change: 'increment' | 'decrement',
+    change: ChangeKeysType,
   ) => void;
 };
 

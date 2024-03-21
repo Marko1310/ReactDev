@@ -4,21 +4,14 @@ import Score from './Score';
 import CurrentDate from './CurrentDate';
 import TeamStats from './TeamStats';
 import Timer from './Timer';
-import { team1, team2 } from '../data/teams';
 import Goals from './Goals';
-
-export type TeamStatsType = {
-  shots: number;
-  fouls: number;
-  yellowCards: number;
-  redCards: number;
-};
-
-export type ScoreType = {
-  team1Score: number;
-  team2Score: number;
-  minute: number;
-};
+import { team1, team2 } from '../data/teams';
+import {
+  ChangeKeysType,
+  ScoreType,
+  TeamKeysType,
+  TeamStatsType,
+} from '../types/dataTypes';
 
 function Main() {
   const [team1Stats, setTeam1Stats] = useState<TeamStatsType>({
@@ -27,14 +20,12 @@ function Main() {
     yellowCards: 0,
     redCards: 0,
   });
-
   const [team2Stats, setTeam2Stats] = useState<TeamStatsType>({
     shots: 0,
     fouls: 0,
     yellowCards: 0,
     redCards: 0,
   });
-
   const [minutes, setMinutes] = useState(0);
   const [seconds, setSeconds] = useState(0);
 
@@ -50,63 +41,64 @@ function Main() {
   const [scoreData, setScoreData] = useState<ScoreType[]>([]);
 
   const handleScoreChange = function (
-    value: 'increment' | 'decrement',
-    team?: 'team1' | 'team2',
+    change: ChangeKeysType,
+    team?: TeamKeysType,
   ) {
-    if (value === 'decrement') {
+    if (change === 'decrease') {
       if (scoreData.length === 0) return;
-      scoreData.pop();
-    }
-    if (value === 'increment' && team === 'team1') {
+      setScoreData((prevStats) => prevStats.slice(0, -1));
+    } else if (
+      change === 'increase' &&
+      (team === 'team1' || team === 'team2')
+    ) {
+      const lastEvent = scoreData[scoreData.length - 1];
+      const currentTeam1Score = lastEvent?.team1Score || 0;
+      const currentTeam2Score = lastEvent?.team2Score || 0;
+
+      const newEvent = {
+        team1Score:
+          team === 'team1' ? currentTeam1Score + 1 : currentTeam1Score,
+        team2Score:
+          team === 'team2' ? currentTeam2Score + 1 : currentTeam2Score,
+        minute: minutes,
+      };
       setScoreData((prevStats) => {
-        const lastEvent = prevStats[prevStats.length - 1];
-        const newEvent = {
-          team1Score: lastEvent?.team1Score ? lastEvent.team1Score + 1 : 1,
-          team2Score: lastEvent?.team2Score ? lastEvent.team2Score : 0,
-          minute: minutes,
-        };
-        return [...prevStats, newEvent];
-      });
-    }
-    if (value === 'increment' && team === 'team2') {
-      setScoreData((prevStats) => {
-        const lastEvent = prevStats[prevStats.length - 1];
-        const newEvent = {
-          team1Score: lastEvent?.team1Score ? lastEvent.team1Score : 0,
-          team2Score: lastEvent?.team2Score ? lastEvent?.team2Score + 1 : 1,
-          minute: minutes,
-        };
         return [...prevStats, newEvent];
       });
     }
   };
 
-  const handleChangeTeamStats = function (
-    team: 'team1' | 'team2',
+  const updateTeamStats = function (
+    prevStats: TeamStatsType,
     fieldName: keyof TeamStatsType,
-    change: 'increment' | 'decrement',
+    change: ChangeKeysType,
+  ) {
+    return {
+      ...prevStats,
+      [fieldName]:
+        change === 'increase'
+          ? prevStats[fieldName] + 1
+          : Math.max(prevStats[fieldName] - 1, 0),
+    };
+  };
+
+  const handleChangeTeamStats = function (
+    team: TeamKeysType,
+    fieldName: keyof TeamStatsType,
+    change: ChangeKeysType,
   ) {
     switch (team) {
       case 'team1':
-        setTeam1Stats((prevStats) => ({
-          ...prevStats,
-          [fieldName]:
-            change === 'increment'
-              ? prevStats[fieldName] + 1
-              : Math.max(prevStats[fieldName] - 1, 0),
-        }));
+        setTeam1Stats((prevStats) =>
+          updateTeamStats(prevStats, fieldName, change),
+        );
         break;
 
       case 'team2':
-        setTeam2Stats((prevStats) => ({
-          ...prevStats,
-          [fieldName]:
-            change === 'increment'
-              ? prevStats[fieldName] + 1
-              : Math.max(prevStats[fieldName] - 1, 0),
-        }));
+        setTeam2Stats((prevStats) =>
+          updateTeamStats(prevStats, fieldName, change),
+        );
         break;
-
       default:
         return;
     }

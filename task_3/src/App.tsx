@@ -30,7 +30,7 @@ function App() {
   const validateForm = function () {
     const errors = getFormErrors(formData);
     setErrors(errors);
-    return Object.keys(errors).length === 0;
+    return Object.values(errors).every((error) => error === '');
   };
 
   const handleSubmit = function (e: React.FormEvent<HTMLFormElement>) {

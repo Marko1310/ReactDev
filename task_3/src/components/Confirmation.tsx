@@ -1,4 +1,4 @@
-import { FormValuesType } from '../App';
+import { FormValuesType } from '../types/types';
 
 type ConfirmationProps = {
   formData: FormValuesType;

@@ -74,7 +74,6 @@ function App() {
           errorAddress={errors.address}
         />
         <Payment paymentType={formData.payment} onChange={onChange} />
-
         <ConfirmButton
           checked={checked}
           handleCheckBoxChange={handleCheckboxChange}

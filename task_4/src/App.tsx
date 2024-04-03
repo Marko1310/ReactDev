@@ -9,6 +9,7 @@ import {
   QueryOptionsType,
   DifficultyType,
   QuestionsAndAnswersType,
+  GameStateType,
 } from './types/applicationTypes';
 
 export default function App() {
@@ -20,9 +21,7 @@ export default function App() {
 
   const [queryOptions, setQueryOptions] =
     useState<QueryOptionsType>(initialQueryOptions);
-  const [gameState, setGameState] = useState<'start' | 'playing' | 'end'>(
-    'start',
-  );
+  const [gameState, setGameState] = useState<GameStateType>('start');
   const [questionsAndAnswers, setQuestionsAndAnswers] = useState<
     QuestionsAndAnswersType[]
   >([]);

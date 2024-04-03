@@ -4,8 +4,14 @@ export const Difficulty = {
   Hard: 'hard',
   Random: '',
 } as const;
-
 export type DifficultyType = (typeof Difficulty)[keyof typeof Difficulty];
+
+export const GameState = {
+  Start: 'start',
+  Playing: 'playing',
+  End: 'end',
+} as const;
+export type GameStateType = (typeof GameState)[keyof typeof GameState];
 
 export type QuestionDataType = {
   category: string;

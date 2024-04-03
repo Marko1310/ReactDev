@@ -12,17 +12,17 @@ import {
 } from './types/applicationTypes';
 
 export default function App() {
-  const [queryOptions, setQueryOptions] = useState<QueryOptionsType>({
+  const initialQueryOptions: QueryOptionsType = {
     amount: 5,
-    category: {
-      id: '',
-      name: '',
-    },
+    category: { id: '', name: '' },
     difficulty: '',
-  });
+  };
 
-  const [startGame, setStartGame] = useState(false);
-  const [endGame, setEndGame] = useState(false);
+  const [queryOptions, setQueryOptions] =
+    useState<QueryOptionsType>(initialQueryOptions);
+  const [gameState, setGameState] = useState<'start' | 'playing' | 'end'>(
+    'start',
+  );
   const [questionData, setQuestionData] = useState<QuestionDataType[]>([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [result, setResult] = useState(0);
@@ -64,41 +64,28 @@ export default function App() {
 
   const handleNextQuestion = () => {
     if (currentQuestion + 1 === totalNumberOfQuestions) {
-      setStartGame(false);
-      setEndGame(true);
+      setGameState('end');
       setCurrentQuestion(0);
     }
     setCurrentQuestion((prev) => prev + 1);
   };
 
   const handleStartGame = () => {
-    try {
-      fetchData(queryOptions);
-      setStartGame(true);
-    } catch (error) {
-      console.error('error fetching', error);
-    }
+    fetchData(queryOptions);
+    setGameState('playing');
   };
 
   const resetGame = () => {
-    setStartGame(false);
+    setGameState('start');
     setQuestionData([]);
-    setEndGame(false);
-    setQueryOptions({
-      amount: 5,
-      category: {
-        id: '',
-        name: '',
-      },
-      difficulty: '',
-    });
+    setQueryOptions(initialQueryOptions);
     setResult(0);
     setCurrentQuestion(0);
   };
 
   return (
     <Main>
-      {!startGame && !endGame && (
+      {gameState === 'start' && (
         <Home
           amount={queryOptions.amount}
           currentCategory={queryOptions.category}
@@ -109,7 +96,7 @@ export default function App() {
           handleStartGame={handleStartGame}
         />
       )}
-      {startGame && (
+      {gameState === 'playing' && (
         <Quiz
           questionsAndAnswers={questionsAndAnswers}
           currentQuestion={currentQuestion}
@@ -119,7 +106,9 @@ export default function App() {
           setResult={setResult}
         />
       )}
-      {endGame && <GameOver result={result} resetGame={resetGame} />}
+      {gameState === 'end' && (
+        <GameOver result={result} resetGame={resetGame} />
+      )}
     </Main>
   );
 }

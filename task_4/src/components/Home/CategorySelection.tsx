@@ -1,8 +1,8 @@
-import { CategoryTytpe } from '../App';
+import { CategoryType } from '../../types/applicationTypes';
 
 type CategorySelectionProps = {
-  categorieList?: CategoryTytpe[];
-  currentCategory: CategoryTytpe;
+  categorieList?: CategoryType[];
+  currentCategory: CategoryType;
   changeCategory: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 };
 
@@ -11,7 +11,6 @@ export default function CategorySelection({
   currentCategory,
   changeCategory,
 }: CategorySelectionProps) {
-  // console.log(categorieList);
   return (
     <div className="flex flex-col">
       <label className="mb-2 text-center font-semibold underline">

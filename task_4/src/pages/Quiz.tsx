@@ -1,12 +1,12 @@
+import Question from '../components/Quiz/Question';
+import Answers from '../components/Quiz/Answers';
+import QuizHeader from '../components/Quiz/QuizHeader';
+import QuestionCounter from '../components/Quiz/QuestionCounter';
+import Result from '../components/Quiz/Result';
 import { useEffect, useState } from 'react';
-import Question from '../components/Question';
-import Answers from '../components/Answers';
-import QuizHeader from '../components/QuizHeader';
-import QuestionCounter from '../components/QuestionCounter';
-import Result from '../components/Result';
 
-export type QuestionDataType = {
-  questionData: {
+export type QuizProps = {
+  questionsAndAnswers: {
     question: string;
     shuffledAnswers: {
       answer: string;
@@ -14,19 +14,20 @@ export type QuestionDataType = {
     }[];
   }[];
   currentQuestion: number;
-  handleNext: () => void;
+  totalNumberOfQuestions: number;
+  handleNextQuestion: () => void;
   result: number;
   setResult: React.Dispatch<React.SetStateAction<number>>;
 };
 
 export default function Quiz({
-  questionData,
+  questionsAndAnswers,
   currentQuestion,
-  handleNext,
+  totalNumberOfQuestions,
+  handleNextQuestion,
   result,
   setResult,
-}: QuestionDataType) {
-  const totalNumberOfQuestions = questionData.length;
+}: QuizProps) {
   const [answerSelected, setAnswerSelected] = useState(false);
 
   useEffect(() => {
@@ -42,9 +43,9 @@ export default function Quiz({
         />
         <Result result={result} />
       </QuizHeader>
-      <Question question={questionData[currentQuestion]?.question} />
+      <Question question={questionsAndAnswers[currentQuestion]?.question} />
       <Answers
-        answers={questionData[currentQuestion]?.shuffledAnswers}
+        answers={questionsAndAnswers[currentQuestion]?.shuffledAnswers}
         answerSelected={answerSelected}
         setAnswerSelected={setAnswerSelected}
         setResult={setResult}
@@ -53,7 +54,7 @@ export default function Quiz({
         <button
           className={`${!answerSelected ? 'bg-gray-300' : 'bg-blue-400'} rounded-md  px-4 py-2 text-white`}
           disabled={!answerSelected}
-          onClick={handleNext}
+          onClick={handleNextQuestion}
         >
           Next Question
         </button>

@@ -1,16 +1,16 @@
-import NumberOfQuestions from '../components/NumberOfQuestions';
-import CategorySelection from '../components/CategorySelection';
-import DifficultySelection from '../components/DifficultySelection';
+import NumberOfQuestions from '../components/Home/NumberOfQuestions';
+import CategorySelection from '../components/Home/CategorySelection';
+import DifficultySelection from '../components/Home/DifficultySelection';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
-import { CategoryTytpe, difficultyType } from '../App';
+import { CategoryType, DifficultyType } from '../types/applicationTypes';
+import { fetchCategories } from '../service/apiService';
 
 type HomeProps = {
   amount: number;
-  currentCategory: CategoryTytpe;
-  difficulty: difficultyType;
+  currentCategory: CategoryType;
+  difficulty: DifficultyType;
   changeCategory: (e: React.ChangeEvent<HTMLSelectElement>) => void;
-  changeDifficulty: (difficulty: difficultyType) => void;
+  changeDifficulty: (difficulty: DifficultyType) => void;
   changeAmount: (change: 'increase' | 'decrease') => void;
   handleStartGame: () => void;
 };
@@ -24,15 +24,13 @@ export default function Home({
   changeAmount,
   handleStartGame,
 }: HomeProps) {
-  const [categorieList, setCategorieList] = useState<CategoryTytpe[]>();
+  const [categorieList, setCategorieList] = useState<CategoryType[]>();
 
-  const fetchCategories = () => {
-    axios
-      .get('https://opentdb.com/api_category.php')
-      .then((res) => setCategorieList(res.data.trivia_categories));
+  const fetchData = () => {
+    fetchCategories().then((categories) => setCategorieList(categories));
   };
 
-  useEffect(fetchCategories, []);
+  useEffect(fetchData, []);
 
   return (
     <div className="flex flex-col items-center">

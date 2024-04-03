@@ -1,9 +1,9 @@
-import { Difficulty, difficultyType } from '../App';
-import DifficultyButton from './UI/ChangeDifficultyButton';
+import { Difficulty, DifficultyType } from '../../types/applicationTypes';
+import DifficultyButton from '../UI/ChangeDifficultyButton';
 
 type DifficultySelectionProps = {
-  currentDifficulty: difficultyType;
-  changeDifficulty: (difficulty: difficultyType) => void;
+  currentDifficulty: DifficultyType;
+  changeDifficulty: (difficulty: DifficultyType) => void;
 };
 
 export default function DifficultySelection({

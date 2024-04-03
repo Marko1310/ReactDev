@@ -8,7 +8,6 @@ type CategorySelectionProps = {
 
 export default function CategorySelection({
   categorieList,
-  currentCategory,
   changeCategory,
 }: CategorySelectionProps) {
   return (
@@ -18,7 +17,6 @@ export default function CategorySelection({
       </label>
       <select
         name="category"
-        value={currentCategory.name}
         onChange={changeCategory}
         className="bg-foreground font-montserrat h-12 rounded-md border pl-2 text-base font-light transition-all focus-within:border hover:border-neutral-400 focus:border-neutral-600 focus:outline-none"
       >

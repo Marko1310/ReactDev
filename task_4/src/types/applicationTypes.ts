@@ -26,3 +26,11 @@ export type QueryOptionsType = {
   category: CategoryType;
   difficulty: DifficultyType;
 };
+
+export type QuestionsAndAnswersType = {
+  question: string;
+  shuffledAnswers: {
+    answer: string;
+    isCorrect: boolean;
+  }[];
+};

@@ -2,13 +2,13 @@ import Home from './pages/Home';
 import Quiz from './pages/Quiz';
 import Main from './components/Main';
 import GameOver from './components/Home/GameOver';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { fetchQuestions } from './service/apiService';
 import { filterData } from './helpers/shuffleDecodeData';
 import {
   QueryOptionsType,
-  QuestionDataType,
   DifficultyType,
+  QuestionsAndAnswersType,
 } from './types/applicationTypes';
 
 export default function App() {
@@ -23,14 +23,18 @@ export default function App() {
   const [gameState, setGameState] = useState<'start' | 'playing' | 'end'>(
     'start',
   );
-  const [questionData, setQuestionData] = useState<QuestionDataType[]>([]);
+  const [questionsAndAnswers, setQuestionsAndAnswers] = useState<
+    QuestionsAndAnswersType[]
+  >([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [result, setResult] = useState(0);
 
-  const questionsAndAnswers = useMemo(
-    () => filterData(questionData),
-    [questionData],
-  );
+  const fetchData = (queryOptions: QueryOptionsType) => {
+    const { amount, category, difficulty } = queryOptions;
+    fetchQuestions(amount, category.id, difficulty).then((questions) =>
+      setQuestionsAndAnswers(filterData(questions)),
+    );
+  };
 
   const changeCategory = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setQueryOptions({
@@ -40,7 +44,7 @@ export default function App() {
   };
 
   const changeDifficulty = (difficulty: DifficultyType) => {
-    setQueryOptions({ ...queryOptions, difficulty: difficulty });
+    setQueryOptions({ ...queryOptions, difficulty });
   };
 
   const changeAmount = (change: 'increase' | 'decrease') => {
@@ -51,13 +55,6 @@ export default function App() {
           ? Math.min(prevOptions.amount + 1, 50)
           : Math.max(prevOptions.amount - 1, 1),
     }));
-  };
-
-  const fetchData = (queryOptions: QueryOptionsType) => {
-    const { amount, category, difficulty } = queryOptions;
-    fetchQuestions(amount, category.id, difficulty).then((questions) =>
-      setQuestionData(questions),
-    );
   };
 
   const totalNumberOfQuestions = questionsAndAnswers.length;
@@ -77,7 +74,7 @@ export default function App() {
 
   const resetGame = () => {
     setGameState('start');
-    setQuestionData([]);
+    setQuestionsAndAnswers([]);
     setQueryOptions(initialQueryOptions);
     setResult(0);
     setCurrentQuestion(0);

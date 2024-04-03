@@ -1,7 +1,7 @@
 import Home from './pages/Home';
 import Quiz from './pages/Quiz';
 import Main from './components/Main';
-import GameOver from './components/Home/GameOver';
+import GameOver from './components/GameOver/GameOver';
 import { useState } from 'react';
 import { fetchQuestions } from './service/apiService';
 import { filterData } from './helpers/shuffleDecodeData';
